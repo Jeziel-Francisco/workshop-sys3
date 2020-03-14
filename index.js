@@ -30,6 +30,8 @@ mongoose.connect(process.env.CONNECTION_STRING || 'mongodb+srv://jeziel:01006536
 
 const User = mongoose.model('users', { name: String, document: String, birthday: Date, username: String, password: String })
 
+express.get('/', (req, res, next) => res.json('sucesso'))
+
 express.post('/user', async (req, res, next) => {
 
     const user = new User({
