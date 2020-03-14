@@ -6,7 +6,7 @@ const cors = require('cors')
 
 const bodyParser = require('body-parser')
 
-// const mongoose = require('mongoose')
+const mongoose = require('mongoose')
 
 express.use(cors())
 
@@ -26,9 +26,9 @@ server.listen(port)
 server.on("error", onError)
 server.on("listening", onListening)
 
-// mongoose.connect(process.env.CONNECTION_STRING || 'mongodb+srv://jeziel:010065363je@cluster0-fk6kw.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.CONNECTION_STRING || 'mongodb+srv://jeziel:010065363je@cluster0-fk6kw.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
 
-// const User = mongoose.model('users', { name: String, document: String, birthday: Date, username: String, password: String })
+const User = mongoose.model('users', { name: String, document: String, birthday: Date, username: String, password: String })
 
 express.get('/', (req, res, next) => res.json('sucesso'))
 
