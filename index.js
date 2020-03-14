@@ -17,7 +17,7 @@ express.use(bodyParser.urlencoded({ extended: true }))
 
 let server
 
-const port = normalizePort(process.env.PORT || "3000")
+const port = 3000
 express.set("port", port)
 
 server = http.createServer(express)
@@ -26,40 +26,58 @@ server.listen(port)
 server.on("error", onError)
 server.on("listening", onListening)
 
-function normalizePort(val) {
-    const port = parseInt(val, 10)
+mongoose.connect('mongodb+srv://jeziel:010065363je@cluster0-fk6kw.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
 
-    if (isNaN(port))
-        return val
+const User = mongoose.model('users', { name: String, document: String, birthday: Date, username: String, password: String })
 
-    if (port >= 0)
-        return port
+express.post('/user', async (req, res, next) => {
 
-    return false
-}
+    const user = new User({
+        name: req.body.name,
+        document: req.body.document,
+        birthday: req.body.birthday,
+        username: req.body.username,
+        password: req.body.password
+    })
+
+    await user.save()
+
+    res.json(user)
+})
+
+express.get('/user', async (req, res, next) => {
+
+    let data = await User.find()
+
+    res.json(data)
+})
+
+express.get('/user/:document', async (req, res, next) => {
+
+    let data = await User.find({ document: req.params.document })
+
+    res.json(data)
+})
+
+express.post('/login', async (req, res, next) => {
+
+    let { username, password } = req.body
+
+    let data = await User.find({ username, password })
+
+    res.json(data)
+})
+
+
+
+
+
+
 
 function onError(error) {
-    if (error.syscall !== "listen")
-        throw error
-
-    const bind = typeof port === "string" ? "Pipe " + port : "Port " + port
-
-    switch (error.code) {
-        case "EACCES":
-            console.error(bind + " requires elevated privileges")
-            process.exit(1)
-            break
-        case "EADDRINUSE":
-            console.error(bind + " is already in use")
-            process.exit(1)
-            break
-        default:
-            throw error
-    }
+    console.log("error: ", error)
 }
 
 function onListening() {
-    const addr = server.address()
-    const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port
-    console.log(`Online ${bind}`)
+    console.log(`Online port ${port}`)
 }
