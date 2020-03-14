@@ -18,7 +18,7 @@ express.use(bodyParser.urlencoded({ extended: true }))
 let server
 
 const port = 3000
-express.set("port", port)
+express.set("port", process.env.PORT || port)
 
 server = http.createServer(express)
 
@@ -26,7 +26,7 @@ server.listen(port)
 server.on("error", onError)
 server.on("listening", onListening)
 
-mongoose.connect('mongodb+srv://jeziel:010065363je@cluster0-fk6kw.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.CONNECTION_STRING || 'mongodb+srv://jeziel:010065363je@cluster0-fk6kw.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
 
 const User = mongoose.model('users', { name: String, document: String, birthday: Date, username: String, password: String })
 
